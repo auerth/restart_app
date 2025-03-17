@@ -36,9 +36,14 @@ class Restart {
   if (webOrigin != null) args['webOrigin'] = webOrigin;
   if (notificationTitle != null) args['notificationTitle'] = notificationTitle;
   if (notificationBody != null) args['notificationBody'] = notificationBody;
-  final result = await _channel.invokeMethod<dynamic>('restartApp', args);
-  print(result);
-  return true;
+  if (result is String) {
+    return result == "ok";
+  } else if (result is Map) {
+    // Falls das Ergebnis eine Map ist, versuchen wir, "status" oder einen anderen Schlüssel zu extrahieren.
+    return result['status'] == "ok";
+  }
+
+  return false;
 }
 
 }
